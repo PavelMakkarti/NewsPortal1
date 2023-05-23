@@ -1,0 +1,36 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+    <h1>Все посты</h1>
+        <h3>{{ Posts|length }}</h3>
+
+    {% if Posts %}
+       <table> <!-- Начинаем описывать таблицу -->
+           <tr> <!-- Добавляем строку -->
+               <td> Заголовок </td>
+               <td> Дата публикации </td>
+               <td> Текст </td>
+           </tr> <!-- Не забываем закрыть HTML-тег строки -->
+           {% for post in Posts %}
+           <tr>
+               <!-- Не забываем, что переменные в шаблоне ничем не отличаются
+                от переменных в Python. Здесь также можно получать доступ к
+                полям объекта модели. Например, здесь мы выводим имя,
+                в следующем столбце описание, и т.д.  -->
+               <td>{{ post.title|censor }}</td>
+               <td>{{ post.dataCreation|date:'d M Y' }}</td>
+               <td>{{ post.text|truncatewords:20 }}</td>
+           </tr>
+           {% endfor %}
+
+       </table> <!-- ... и таблицы -->
+   {% else %}
+       <!-- Если товаров нет, говорим, что товаров нет ;) -->
+       <h2>Постов нет!</h2>
+   {% endif %}
+{% endblock content %}
