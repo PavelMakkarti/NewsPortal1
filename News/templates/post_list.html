@@ -15,18 +15,38 @@ Posts
        <input type="submit" value="Найти" />
    </form>
 
+{% if perms.New.add_post %}
+    <a href="{% url 'post_create' %}">Добавить пост</a>
+    {% endif %}
+
     {% if Posts %}
        <table>
            <tr>
-               <td> Заголовок </td>
-               <td> Дата публикации </td>
-               <td> Текст </td>
+               <td> <b>Заголовок</b> </td>
+               <td> <b>Дата публикации</b> </td>
+               <td> <b>Текст</b> </td>
+               <td> <b>Категория</b> </td>
+
+               {% if perms.New.change_post or perms.New.delete_post %}
+                <td>Действия</td>
+                {% endif %}
+
            </tr>
            {% for post in Posts %}
            <tr>
                <td>{{ post.title|censor }}</td>
                <td>{{ post.dataCreation|date:'d M Y' }}</td>
                <td>{{ post.text|truncatewords:20 }}</td>
+               <td>{{ post.categoryType }}</td>
+
+               <td>
+                    {% if perms.New.change_post %}
+                    <a href="{% url 'post_update' pk=post.id %}">Изменить</a>
+                    {% endif %}
+                    {% if perms.post.delete_post %}
+                    <a href="{% url 'post_delete' post.id %}">Удалить</a>
+                    {% endif %}
+                </td>
            </tr>
            {% endfor %}
 
